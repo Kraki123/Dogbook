@@ -4,17 +4,30 @@ Ett socialt nätverk för hundar på hunddagis
 📘 Om projektet
 DogBook är en webbaserad applikation som gör det enklare för personal på hunddagis att hålla koll på vilka hundar som är på plats och hur de relaterar till varandra. Varje hund får en egen profil med information, bild och en vänlista – likt ett Facebook för hundar.
 
+
+
+
+
 🧰 Använda tekniker
 Område	Tekniker
 Frontend	React, React Router, Axios
 Backend	Node.js, Express, MongoDB
 Testning	Jest, React Testing Library
 
+
+
+
+
+
 📦 Installation
 ✅ Förutsättningar
 Node.js installerat
-
 MongoDB installerat och tillgängligt lokalt
+
+
+
+
+
 
 🚀 Backend – Kom igång
 Navigera till backend-mappen:
@@ -43,6 +56,15 @@ Redigera
 node server.js
 📍 Servern körs på: http://localhost:5001
 
+
+
+
+
+
+
+
+
+
 💻 Frontend – Kom igång
 Gå till frontend-mappen:
 
@@ -64,6 +86,11 @@ Redigera
 npm run dev
 📍 Frontend nås via: http://localhost:5173
 
+
+
+
+
+
 🧪 Testa applikationen
 Funktionell genomgång:
 Skapa en hund – exempelvis Dog1
@@ -83,6 +110,10 @@ Bekräfta att Dog1 är vän med både Wolverine och Lassie
 Radera Wolverine
 
 Verifiera att Dog1 endast har Lassie kvar som vän
+
+
+
+
 
 🧪 Testning
 För att köra tester (i frontend-mappen):
