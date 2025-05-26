@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchDog, updateDog, fetchDogs } from "../services/dogService";
 
@@ -14,7 +13,10 @@ function DogEdit() {
     fetchDog(id)
       .then((data) => {
         if (!data) throw new Error("Dog not found");
-        setDog({ ...data, friends: data.friends || [] });
+        const friends = (data.friends || []).map((friend) =>
+          typeof friend === "object" ? friend._id : friend
+        );
+        setDog({ ...data, friends });
       })
       .catch((err) => {
         console.error("Error fetching dog:", err);
@@ -50,7 +52,17 @@ function DogEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateDog(id, dog);
+      // Skapa en kopia av dog utan onödiga fält
+      const dogData = {
+        name: dog.name,
+        nickname: dog.nickname,
+        age: dog.age,
+        bio: dog.bio,
+        image: dog.image,
+        present: dog.present,
+        friends: dog.friends || [],
+      };
+      await updateDog(id, dogData);
       navigate(`/dog/${id}`);
     } catch (err) {
       console.error("Error updating dog:", err);
@@ -104,20 +116,22 @@ function DogEdit() {
         />
         Present at daycare?
       </label>
-      {allDogs
-        .filter((d) => d._id !== dog._id)
-        .map((friend) => (
-          <label key={friend._id}>
-            Friend:
-            <input
-              className="friend-checkbox-edit"
-              type="checkbox"
-              checked={(dog.friends || []).includes(friend._id)}
-              onChange={() => toggleFriend(friend._id)}
-            />
-            {friend.name}
-          </label>
-        ))}
+      <div>
+        <strong>Friends:</strong>
+        {allDogs
+          .filter((d) => d._id !== dog._id)
+          .map((friend) => (
+            <label key={friend._id} style={{ display: "block" }}>
+              <input
+                className="friend-checkbox-edit"
+                type="checkbox"
+                checked={(dog.friends || []).includes(friend._id)}
+                onChange={() => toggleFriend(friend._id)}
+              />
+              {friend.name}
+            </label>
+          ))}
+      </div>
 
       <button type="submit">Save Changes</button>
     </form>

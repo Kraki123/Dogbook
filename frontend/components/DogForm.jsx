@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   createDog,
@@ -27,7 +26,9 @@ function DogForm() {
 
   useEffect(() => {
     fetchDogs()
-      .then(setAllDogs)
+      .then((data) => {
+        setAllDogs(data);
+      })
       .catch((err) => {
         console.error("Error fetching dogs:", err);
         setError("Failed to load dogs.");
@@ -37,7 +38,10 @@ function DogForm() {
       fetchDog(id)
         .then((data) => {
           if (!data) throw new Error("Dog not found");
-          setDog({ ...data, friends: data.friends || [] });
+          const friends = (data.friends || []).map((friend) =>
+            typeof friend === "object" ? friend._id : friend
+          );
+          setDog({ ...data, friends });
         })
         .catch((err) => {
           console.error("Error fetching dog:", err);
@@ -55,18 +59,31 @@ function DogForm() {
   };
 
   const handleFriendToggle = (friendId) => {
-    const current = dog.friends || [];
-    const updated = current.includes(friendId)
-      ? current.filter((id) => id !== friendId)
-      : [...current, friendId];
-    setDog((prev) => ({ ...prev, friends: updated }));
+    setDog((prev) => {
+      const current = prev.friends || [];
+      const updated = current.includes(friendId)
+        ? current.filter((id) => id !== friendId)
+        : [...current, friendId];
+      return { ...prev, friends: updated };
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     try {
-      const result = editing ? await updateDog(id, dog) : await createDog(dog);
+      const dogData = {
+        name: dog.name,
+        nickname: dog.nickname,
+        age: dog.age,
+        bio: dog.bio,
+        image: dog.image,
+        present: dog.present,
+        friends: dog.friends || [],
+      };
+      const result = editing
+        ? await updateDog(id, dogData)
+        : await createDog(dogData);
       if (result) {
         console.log("Dog saved successfully:", result);
         navigate("/", { state: { refresh: true } });
@@ -159,20 +176,22 @@ function DogForm() {
         </button>
       )}
 
-      {allDogs
-        .filter((d) => !id || d._id !== id)
-        .map((friend) => (
-          <label key={friend._id}>
-            Friends:
-            <input
-              className="friend-checkbox-edit"
-              type="checkbox"
-              checked={(dog.friends || []).includes(friend._id)}
-              onChange={() => handleFriendToggle(friend._id)}
-            />
-            {friend.name}
-          </label>
-        ))}
+      <div>
+        <strong>Friends:</strong>
+        {allDogs
+          .filter((d) => !id || d._id !== id)
+          .map((friend) => (
+            <label key={friend._id} style={{ display: "block" }}>
+              <input
+                className="friend-checkbox-edit"
+                type="checkbox"
+                checked={(dog.friends || []).includes(friend._id)}
+                onChange={() => handleFriendToggle(friend._id)}
+              />
+              {friend.name}
+            </label>
+          ))}
+      </div>
 
       <button type="submit">{editing ? "Update Dog" : "Create Dog"}</button>
     </form>
