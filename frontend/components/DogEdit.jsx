@@ -116,19 +116,23 @@ function DogEdit() {
         />
         Present at daycare?
       </label>
+      <hr />
       <div>
         <strong>Friends:</strong>
+        <br />
+        <br />
         {allDogs
           .filter((d) => d._id !== dog._id)
           .map((friend) => (
             <label key={friend._id} style={{ display: "block" }}>
+              {friend.name}
               <input
                 className="friend-checkbox-edit"
                 type="checkbox"
                 checked={(dog.friends || []).includes(friend._id)}
                 onChange={() => toggleFriend(friend._id)}
               />
-              {friend.name}
+              <hr />
             </label>
           ))}
       </div>

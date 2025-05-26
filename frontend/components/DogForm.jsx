@@ -158,6 +158,7 @@ function DogForm() {
         />
         Present at daycare?
       </label>
+      <hr />
       {editing && (
         <button
           type="button"
@@ -178,17 +179,20 @@ function DogForm() {
 
       <div>
         <strong>Friends:</strong>
+        <br />
+         <br />
         {allDogs
           .filter((d) => !id || d._id !== id)
           .map((friend) => (
             <label key={friend._id} style={{ display: "block" }}>
+              {friend.name}
               <input
                 className="friend-checkbox-edit"
                 type="checkbox"
                 checked={(dog.friends || []).includes(friend._id)}
                 onChange={() => handleFriendToggle(friend._id)}
               />
-              {friend.name}
+              <hr />
             </label>
           ))}
       </div>
