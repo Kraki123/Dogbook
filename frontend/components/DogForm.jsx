@@ -7,7 +7,7 @@ import {
   fetchDogs,
   updateDogPresence,
 } from "../services/dogService";
-
+// Form
 function DogForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -180,7 +180,7 @@ function DogForm() {
       <div>
         <strong>Friends:</strong>
         <br />
-         <br />
+        <br />
         {allDogs
           .filter((d) => !id || d._id !== id)
           .map((friend) => (
